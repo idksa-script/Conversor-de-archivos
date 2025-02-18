@@ -35,4 +35,5 @@ if opcion not in formato:
 
 formato_selecionado = formato[opcion].lower()
 nuevo_nombre = f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.{formato_selecionado}"
+imagen.save(nuevo_nombre, formato_selecionado)
 print(nuevo_nombre)
