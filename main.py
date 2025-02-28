@@ -25,7 +25,7 @@ def pdf_a_imagenes(parametro, formato="png"):
 
     imagenes = convert_from_path(parametro, fmt=formato)
     for i, imagen in enumerate(imagenes):
-        nombre_imagen = f"pagina_(i + 1).{formato}"
+        nombre_imagen = f"pagina_{i + 1}.{formato}"
         imagen.save(nombre_imagen, formato.upper())
     return print("correcto")
 
