@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 from PIL import Image
 import sys
 import os
 from datetime import datetime
 from pdf2image import convert_from_path
+import subprocess
 
 print("Conversor De Archivos".center(50,"*"))
 
@@ -40,8 +43,23 @@ def pdf_a_imagenes(parametro, formato="png"):
         print(f"Error: {e}")
 
 
+def world_excel_a_pdf(parametro):
+    if ".docx" or ".xlsx" in parametro:
+        comando = [
+            "libreoffice",
+            "--headless",
+            "--convert-to", "pdf",
+            parametro
+        ]
+        subprocess.run(comando, check=True)
+        
+        print("Proceso terminado con exito")
+    else:
+        print("Error")
+
+
 print("""Ingresa a que tipo de archivo quieres convertir:
-        1.- Una imagen a otro formato 2.- PDF a imagenes""")
+        1.- Una imagen a otro formato 2.- PDF a imagenes 3.-word, excel a pdf""")
 
 eleccion = int(input("Elige el procedimiento: "))
 
@@ -70,4 +88,6 @@ if eleccion == 1:
 elif eleccion == 2:
 
     pdf_a_imagenes(parametro, formato="png")
-    
+
+elif eleccion == 3:
+    world_excel_a_pdf(parametro)
