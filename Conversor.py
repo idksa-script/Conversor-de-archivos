@@ -56,6 +56,37 @@ def world_excel_a_pdf(parametro):
         print("Proceso terminado con exito")
     else:
         print("Error")
+    
+def pdf_a_world_excel(parametro):
+    print("""A que formato quieres convertir?:
+          1.-word 2.-excel""")
+    
+    elegir = int(input("Elige una opcion: "))
+
+    if ".pdf" in parametro:
+        if elegir == 1:
+            comando =[
+                "libreoffice",
+                "--headless",
+                "--convert-to", "docx",
+                parametro
+            ]
+
+            subprocess.run(comando, check=True)
+
+            print("Preceso terminado")
+
+        elif elegir == 2:
+            comando = [
+                "libreoffice",
+                "--headless",
+                "--convert-to", "xlsx",
+                parametro
+            ]        
+
+            subprocess.run(comando, check=True)
+
+            print("Proceso terminado")
 
 
 print("""Ingresa a que tipo de archivo quieres convertir:
