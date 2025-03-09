@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+!/usr/bin/env python3
 
 from PIL import Image
 import sys
@@ -7,44 +7,53 @@ from datetime import datetime
 from pdf2image import convert_from_path
 import subprocess
 
-print("Conversor De Archivos".center(50,"*"))
+# Imprime el encabezado del programa
+print("Conversor De Archivos".center(50, "*"))
 
-if len(sys.argv) !=2:
+# Verifica si el programa recibe un argumento
+if len(sys.argv) != 2:
     print("Ejemplo de como se usa: \n\tconversor.py image.jpg")
     exit()
 
+# Almacena el argumento en una variable
 parametro = sys.argv[1]
 
-
+# Convierte una imagen a otro formato
+# opcion: opción elegida por el usuario
+# formato: diccionario de formatos disponibles
+# imagen: objeto de la imagen a convertir
 def imagen_a_otro_formato(opcion, formato, imagen):
     formato_selecionado = formato[opcion].lower()
-    nuevo_nombre = f"{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.{formato_selecionado}"
+    nuevo_nombre = f"{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.{formato_selecionado}"
     imagen.save(nuevo_nombre, formato_selecionado)
     return nuevo_nombre
 
-
+# Convierte un archivo PDF en imágenes
+# parametro: archivo PDF
+# formato: formato de salida de las imágenes (por defecto PNG)
 def pdf_a_imagenes(parametro, formato="png"):
     imagenes = convert_from_path(parametro, fmt=formato)
-    
+
     print("Iniciando...")
     nombre_carpeta = parametro[:-4]
     os.mkdir(nombre_carpeta)
     os.chdir(nombre_carpeta)
 
     try:
-        paginas = len(imagenes)    
+        paginas = len(imagenes)
         for i, imagen in enumerate(imagenes):
             nombre_imagen = f"pagina_{i + 1}.{formato}"
             imagen.save(nombre_imagen, formato.upper())
             print(f"\rProcesando pagina {i + 1}/{paginas}", end="")
-        print("\nPreceso terminado")
+        print("\nProceso terminado")
 
     except Exception as e:
         print(f"Error: {e}")
 
-
+# Convierte archivos Word o Excel a PDF
+# parametro: archivo a convertir
 def world_excel_a_pdf(parametro):
-    if ".docx" or ".xlsx" in parametro:
+    if ".docx" in parametro or ".xlsx" in parametro:
         comando = [
             "libreoffice",
             "--headless",
@@ -52,20 +61,22 @@ def world_excel_a_pdf(parametro):
             parametro
         ]
         subprocess.run(comando, check=True)
-        
-        print("Proceso terminado con exito")
+
+        print("Proceso terminado con éxito")
     else:
-        print("Error")
-    
+        print("Error: Formato no válido")
+
+# Convierte un archivo PDF a Word o Excel
+# parametro: archivo PDF
 def pdf_a_world_excel(parametro):
-    print("""A que formato quieres convertir?:
-          1.-word 2.-excel""")
-    
-    elegir = int(input("Elige una opcion: "))
+    print("""A qué formato quieres convertir?:
+          1.- Word 2.- Excel""")
+
+    elegir = int(input("Elige una opción: "))
 
     if ".pdf" in parametro:
         if elegir == 1:
-            comando =[
+            comando = [
                 "libreoffice",
                 "--headless",
                 "--convert-to", "docx",
@@ -74,7 +85,7 @@ def pdf_a_world_excel(parametro):
 
             subprocess.run(comando, check=True)
 
-            print("Preceso terminado")
+            print("Proceso terminado")
 
         elif elegir == 2:
             comando = [
@@ -82,18 +93,20 @@ def pdf_a_world_excel(parametro):
                 "--headless",
                 "--convert-to", "xlsx",
                 parametro
-            ]        
+            ]
 
             subprocess.run(comando, check=True)
 
             print("Proceso terminado")
 
+# Menú principal para seleccionar la conversión
+print("""Ingresa a qué tipo de archivo quieres convertir:
+        1.- Una imagen a otro formato 2.- PDF a imágenes 3.- Word, Excel a PDF""")
 
-print("""Ingresa a que tipo de archivo quieres convertir:
-        1.- Una imagen a otro formato 2.- PDF a imagenes 3.-word, excel a pdf""")
-
+# Recoge la elección del usuario
 eleccion = int(input("Elige el procedimiento: "))
 
+# Realiza el procedimiento seleccionado
 if eleccion == 1:
 
     imagen = Image.open(parametro)
@@ -110,7 +123,7 @@ if eleccion == 1:
     }
 
     if opcion not in formato:
-        print("Opcion no disponible")
+        print("Opción no disponible")
         exit()
 
     imagen_a_otro_formato(opcion, formato, imagen)
@@ -122,3 +135,4 @@ elif eleccion == 2:
 
 elif eleccion == 3:
     world_excel_a_pdf(parametro)
+
